@@ -6,6 +6,7 @@ const { ensureAuthenticated } = require('../config/checkAuth')
 const  creds  = require('../utils/creds');
 const arrayToJSONObject = require('../utils/arrayToJSONObject')
 const sliceArrayToJSONObj = require('../utils/sliceArrayToJSONObj')
+const JSONListas = require('../utils/JSONListas')
 const cuantasUrnas = require('../utils/cuantasUrnas')
 
 //------------ Welcome Route ------------//
@@ -36,16 +37,27 @@ router.get('/urnas/:sede', async (req, res) => {
     range: "Sheet1!A1:R",
   });
 
+  const getRows = await googleSheets.spreadsheets.values.get({
+    auth,
+    spreadsheetId,
+    range: "Sheet3!A2:F",
+  });
+
   const data = await getUrnas.data.values
+  const dataListas = getRows.data.values
   const [sede, idIn, idOut, listas] = cuantasUrnas(id)
+  // console.log(dataListas)
   const grupo = sliceArrayToJSONObj(data, idIn, idOut, listas)
+  const listasRes = JSONListas(dataListas, id, listas)
+  // console.log(listasRes)
   // console.log("esta es la data ")
-  console.log(grupo)
+  // console.log(sede)
   // console.log("este es el grupo ")
-  // console.log(grupo)
+  console.log(grupo)
 
     res.status(200).render('sedes', {  
       urnas: grupo,
+      listas: listasRes,
       sede: sede
     });
 

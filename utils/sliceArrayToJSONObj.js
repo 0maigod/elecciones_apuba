@@ -29,8 +29,6 @@ module.exports = function sliceArrayToJSONObj (arr, idIn, idOut, listas){
                                         list[keys[j]] = d[j]
                                 }
                                 o['list'] = list
-                                // console.log('-----------list03------------')
-                                // console.log(list)
                         }
                 }
         }
